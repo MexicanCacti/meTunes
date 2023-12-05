@@ -11,7 +11,6 @@ https://learn.microsoft.com/en-us/windows/win32/multimedia/mci-reference
 #include <windows.h>
 #include <string>
 #include <iomanip> // used for console formatting
-#include <chrono> // for timing
 namespace fs = std::experimental::filesystem;
 using namespace std;
 
@@ -116,7 +115,7 @@ void playSong(Playlist& playlist, const string& song, int& volume, ostream& out)
       // then here pause the timer and start after resume song
       convertTime(timer.Convert(), out);
       mciSendStringA("pause song", nullptr, 0, 0);
-      cout << "Press any button to resume song (q to quit)...\n";
+      cout << "Press any button to resume song...\n";
       getline(cin, command);
       timer.Resume();
       mciSendStringA("resume song", nullptr, 0, 0);
@@ -176,7 +175,7 @@ void playPlaylist(Playlist& playlist, int& volume, ostream& out) {
         // then here pause the timer and start after resume song
         convertTime(timer.Convert(), out);
         mciSendStringA("pause song", nullptr, 0, 0);
-        cout << "Press any button to resume song (q to quit)...\n";
+        cout << "Press any button to resume song...\n";
         getline(cin, command);
         timer.Resume();
         mciSendStringA("resume song", nullptr, 0, 0);
