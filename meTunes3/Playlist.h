@@ -60,15 +60,9 @@ string Playlist::getSongName(const string& songCheck) {
 }
 
 void Playlist::shuffleSongs() {
-  //https://www.coderslexicon.com/generating-non-repeating-random-values-in-c/
-  vector<int>Random;
-  vector<string>shuffledSongs;
-  // list of numbers 0 - length of song list
-  for (int i = 0; i < songs.size(); i++) {
-    Random.push_back(i);
-  }
   
   srand(time(0));
+  //https://www.coderslexicon.com/generating-non-repeating-random-values-in-c/
   for (int i = 0; i < songs.size(); i++) {
     int randSong1 = (rand() % songs.size() );
     int randSong2 = (rand() % songs.size());
