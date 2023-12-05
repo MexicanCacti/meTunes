@@ -32,53 +32,68 @@ void convertTime(int time, ostream& out) {
   seconds = (time / 1000) % 60;
   minutes = (time / (1000 * 60)) % 60;
   hours = (time / (1000 * 60 * 60)) % 24;
-  
+
   out << setfill('0') << setw(2) << hours << " :: " << setw(2) << minutes << " :: " << setw(2) << seconds << endl;
 }
 
 int displayPlaylists(vector<Playlist>& Playlists, ostream& out) {
   string choice;
+  int num;
 
   cout << endl;
   for (int i = 0; i < Playlists.size(); i++) {
     out << i << ") " << Playlists[i].getFolderName() << endl;
   }
-  
-  out << "\n Select Folder by Name or by Index: ";
-  getline(cin, choice);
-  out << endl;
-  if (atoi(choice.c_str()) > Playlists.size()) return 0; // user inputted a value greater than the options available, by default return the first choice
-  for (int i = 0; i < Playlists.size(); i++) {
-    if (Playlists[i].getFolderName() == choice) return i;
+
+  while (true) {
+    out << "\nSelect Folder by Name or by Index: ";
+    getline(cin, choice);
+    out << endl;
+
+    if (choice == "q" || choice == "Q") return -1;
+    num = atoi(choice.c_str());
+    if (num <= Playlists.size() - 1 && num >= 0) { // user inputted a valid choice
+      return num;
+    }
+    for (int i = 0; i < Playlists.size(); i++) {
+      if (Playlists[i].getFolderName() == choice) return i;
+    }
+    out << " Invalid input.";
   }
-  return atoi(choice.c_str()); // by default will select first playlist in list if invalid input
-  
 }
 
 int displaySongs(Playlist& Playlist, ostream& out) {
   string choice;
+  int num;
   Playlist.printSongs(out);
-  
-  out << "\n Input song by name or by index: ";
-  getline(cin, choice);
-  out << endl;
-  if(atoi(choice.c_str()) > Playlist.Songs()) return 0; // user inputted a value greater than the options available, by default return the first choice
-  for (int i = 0; i < Playlist.Songs(); i++) {
-    if(Playlist.getSongName(choice) == choice) return i;
+
+  while (true) {
+    out << "\n Input song by name or by index: ";
+    getline(cin, choice);
+    out << endl;
+
+    if (choice == "q" || choice == "Q") return -1;
+    num = atoi(choice.c_str());
+    if (num <= Playlist.Songs() - 1 && num >= 0) { // user inputted a valid choice
+      return num;
+    }
+    for (int i = 0; i < Playlist.Songs(); i++) {
+      if (Playlist.getSongName(choice) == choice) return i;
+    }
+    out << " Invalid input.";
   }
-  return atoi(choice.c_str()); // by default will play first song in list if invalid input
 }
 
 void playSong(Playlist& playlist, const string& song, int& volume, ostream& out) {
   string command;
   string message;
   string songLocation = ("open \"" + fs::current_path().string() + "\\" + playlist.getFolderName() + "\\" + playlist.getSongName(song) + ".mp3" + "\" type mpegvideo alias song"); // for the mcisendstring function, song can now be referenced using the alias song
-  
+
   LPSTR length = new char[100];
   int trackTime = 0;
   int currentTime = 0;
   Timer timer;
-  
+
   mciSendStringA(songLocation.c_str(), nullptr, 0, 0);
   mciSendStringA("play song", nullptr, 0, 0); //play song is the command to play the alias "song" 
   message = "setaudio song volume to " + to_string(volume);
@@ -133,7 +148,7 @@ void playPlaylist(Playlist& playlist, int& volume, ostream& out) {
   LPSTR length = new char[100];
   int trackTime;
   Timer timer;
-  
+
   out << "\nNow playing playlist " << playlist.getFolderName() << endl;
   playlist.printSongs(out);
   for (int song = 0; song < playlist.Songs(); song++) {

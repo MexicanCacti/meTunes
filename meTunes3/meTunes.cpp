@@ -3,20 +3,21 @@
 #include "MusicPlayer.h"
 int main() {
   vector<Playlist>Playlists;
-  
+
   cout << "Looking for folders in: " << fs::current_path() << endl;
   getFolders(Playlists);
   if (Playlists.size() == 0) {
     cout << "No folder containing mp3s found. Please make sure folders with mp3 are located at:\n" << fs::current_path() << endl;
     return 0;
   }
-  
+
   string command; // user input
   int songNumber; // to store song selection from displaySongs
   int playlistIndex; // to store playlist selection from displayPlayLists
   int volume = 100;   // if the user changes volume, want to keep track of changes, by default max volume is 100
-  
+
   playlistIndex = displayPlaylists(Playlists, cout);
+  if (playlistIndex == -1) return 0;
   while (true) {
     cout << "Playlist: " << Playlists[playlistIndex].getFolderName() << endl;
     Playlists[playlistIndex].printSongs(cout);
@@ -33,6 +34,7 @@ int main() {
     cout << endl;
     if (command == "0") {
       songNumber = displaySongs(Playlists[playlistIndex], cout);
+      if (songNumber == -1) return 0;
       playSong(Playlists[playlistIndex], Playlists[playlistIndex].getSongName(songNumber), volume, cout);
     }
     else if (command == "1") {
@@ -48,6 +50,7 @@ int main() {
     }
     else if (command == "4") {
       playlistIndex = displayPlaylists(Playlists, cout);
+      if (playlistIndex == -1) return 0;
     }
     else if (command == "5") {
       Playlists[playlistIndex].sortSongs();
